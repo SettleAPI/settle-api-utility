@@ -1,0 +1,142 @@
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #252525;
+  background-color: whitesmoke;
+}
+
+pre, code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+  font-size: small;
+}
+
+.button-group {
+  display: inline-block;
+  margin-top: 0.5em;
+}
+
+.button-group > button:not(:last-child) {
+  margin-right: 0.5em;
+}
+
+.box {
+  padding: 1em;
+  border-radius: 6px;
+  background: white;
+  margin: 0.5em;
+  min-height: 550px;
+}
+
+.content {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1em;
+  padding-right: 1em;
+  max-width: 1280px;
+}
+
+.row {
+  line-height: 1;
+  vertical-align: middle;
+  border-bottom: 1px solid lightgray;
+  padding: 0.5em;
+  margin: 0;
+}
+
+
+@media screen and (max-width: 35.5em) {
+  .hide-sm {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 48em) {
+  .hide-md {
+    display: none !important;
+  }
+}
+
+/* Pure */
+.pure-control-group {
+  margin-top: 1em;
+}
+
+/* Badges */
+
+.label,
+.badge {
+  background-color: #b5b5b5;
+  color: #fff;
+  font-size: 12px;
+  font-size: 0.75rem;
+  line-height: 1;
+  font-weight: bold;
+  padding: 3px 7px;
+  text-align: center;
+  vertical-align: inherit;
+  white-space: nowrap;
+}
+
+.label {
+  border-radius: 4px;
+  display: inline;
+}
+
+.badge {
+  border-radius: 10px;
+  display: inline-block;
+  padding: 1px 7px;
+}
+
+.label[href]:hover, .label[href]:focus {
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a.badge:hover, a.badge:focus {
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.label a,
+.badge a {
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.label:empty,
+.badge:empty {
+  display: none;
+}
+
+
+/* Loader */
+
+.loader {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(90,90,90,.3);
+  border-radius: 50%;
+  border-top-color: rgba(90,90,90);
+  animation: spin 0.5s ease-in-out infinite;
+  -webkit-animation: spin 0.5s ease-in-out infinite;
+}
+
+.loader-small {
+  width: 0.5em;
+  height: 0.5em;
+}
+
+
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}

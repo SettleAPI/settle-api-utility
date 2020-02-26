@@ -1,0 +1,49 @@
+.App {
+  text-align: left;
+}
+
+.App-logo {
+  height: 50px;
+  padding: 20px;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 3vh;
+  color: white;
+}
+
+.App-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  max-width: 1440px;
+  margin: auto;
+}
+.App-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.pure-form .App-headerInput {
+  background-color: #282c34;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
