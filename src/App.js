@@ -7,7 +7,6 @@ import './App.css';
 
 
 /* ToDO:
-  - Environment switch
   - Support callback flow via interaction with HTTP server
   - Visualisations
   - LineItems
@@ -561,9 +560,14 @@ class App extends React.Component {
               </div>
               <div className="pure-control-group">
                 <label htmlFor="environment" className="hide-md">Environment:</label>
-                <select id="environment" className="App-headerInput">
-                  <option>Sandbox</option>
-                  <option>Production</option>
+                <select
+                  className="App-headerInput"
+                  id="environment"
+                  name="environment"
+                  value={environment}
+                  onChange={this.handleChange} >
+                  <option>sandbox</option>
+                  <option>production</option>
                 </select>
               </div>
             </div>

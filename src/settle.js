@@ -13,7 +13,7 @@ exports.configs = {
       isi: '1453180781'
     }
   },
-  'prod': {
+  'production': {
     'testUserId': '',
     'testMerchantId': '',
     'testSecret': '',
