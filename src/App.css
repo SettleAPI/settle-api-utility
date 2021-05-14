@@ -38,6 +38,38 @@
   color: #61dafb;
 }
 
+button.pure-button.pure-button-danger {
+  background-color: #ff4f43;
+  color: white;
+}
+
+aside {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  padding: 1em;
+}
+aside.info-block {
+  background-color: #f5f8ff;
+  border: 1px solid cornflowerblue;
+}
+aside.warn-block {
+  background-color: #fff9e3;
+  border: 1px solid rgb(237, 216, 100);
+}
+
+pre {
+  border: 1px dashed grey;
+  padding: 0.5em;
+}
+.status {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-size: small;
+}
+
+label {
+  font-weight: bold;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
