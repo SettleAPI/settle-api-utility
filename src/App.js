@@ -265,9 +265,8 @@ class App extends React.Component {
     const { step, demo } = this.state
     let nextStep = step + 1;
     if (step === steps.OUTCOME && (demo === demos.PHONENUMBER || demo === demos.PAYMENTLINK)) nextStep += 1;
-    if (step === steps.SHORTLINK) this.prepareDemo();
+    if (step === steps.PAYMENT_REQUEST) this.prepareDemo();
     this.setState({ step: nextStep })
-    // console.log('Step:', step, ' Next:', nextStep, 'Demo: ', demo)
   }
 
   handlePrevious(event) {
@@ -275,7 +274,6 @@ class App extends React.Component {
     let prevStep = step - 1;
     if (step === steps.PAYMENT_REQUEST && (demo === demos.PHONENUMBER || demo === demos.PAYMENTLINK)) prevStep -= 1
     this.setState({ step: prevStep })
-    // console.log('Step:', step, ' Prev:', prevStep, 'Demo: ', demo)
   }
 
   async handleCreateShortlink(event) {
