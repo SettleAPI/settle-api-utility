@@ -1,6 +1,6 @@
-const axios = require('axios');
+import axios from 'axios';
 
-exports.configs = {
+export const configs = {
   'sandbox': {
     'testUserId': '76pj520h',
     'testMerchantId': 'f1645s',
@@ -8,8 +8,8 @@ exports.configs = {
     'deeplink': {
       env: 'settle-demo',
       baseUrl: 'settledemo.page.link',
-      apn: 'eu.settle.app.demo',
-      ibi: 'eu.settle.app.demo',
+      apn: 'eu.settle.app.sandbox',
+      ibi: 'eu.settle.app.sandbox',
       isi: '1453180781'
     }
   },
@@ -27,9 +27,8 @@ exports.configs = {
   }
 };
 
-
 // https://developer.settle.eu/handlers.html#outcome
-exports.outcomeDescriptions = {
+export const outcomeDescriptions = {
   1003: `Waiting for customer ⏱`,
   2000: `Payment captured 🤑`,
   3008: `Payment authorized, ready for capture 💪`,
@@ -41,7 +40,7 @@ exports.outcomeDescriptions = {
 }
 
 // https://developer.settle.eu/handlers.html#outcome
-exports.statusCodes = {
+export const statusCodes = {
   PENDING: 1003,
   OK: 2000,
   AUTH: 3008,
@@ -52,11 +51,13 @@ exports.statusCodes = {
   AUTH_EXPIRED: 5012,
 }
 
-
-exports.doRequest = function (method, endpoint, credentials, payload) {
-    const { merchantId, userId, secret } = credentials
-    console.debug('Request:', method, endpoint, payload, credentials)
-    return axios({
+let requestCounter = 0;
+export const doRequest = async function (method, endpoint, credentials, payload) {
+  const { merchantId, userId, secret } = credentials
+  console.debug(`[${++requestCounter}] REQUEST`, method, endpoint, credentials, payload)
+  let response;
+  try {
+    response = await axios({
       method,
       url: endpoint,
       data: payload,
@@ -66,46 +67,77 @@ exports.doRequest = function (method, endpoint, credentials, payload) {
         'Authorization': `SECRET ${secret}`
       },
     })
-  };
+    console.debug(`[${requestCounter}] RESPONSE ${response.status}:`, response.data)
+    return response;
+  } catch (error) {
+    if (error.response) {
+      console.debug(`[${requestCounter}] RESPONSE ${error.response.status}:`, error.response.data)
+    } else {
+      console.debug(`[${requestCounter}] RESPONSE ${error}:`, error)
+    }
+    console.error(error)
+    throw error;
+  }
 
+};
+
+export const getFakeProducts = function () {
+  const catalog = [
+    { name: '🍐 Pear     ', price: 2 },
+    { name: '🍎 Apple   ', price: 2 },
+    { name: '🍌 Banana ', price: 3 },
+    { name: '🍇 Grapes ', price: 4 },
+    { name: '🥭 Mango  ', price: 5 },
+    { name: '🍒 Cherry  ', price: 6 },
+  ]
 
   function getRandomInt(max = 5) {
     return Math.floor(Math.random() * Math.floor(max));
   }
 
-  function getProductLine(name, amount, price) {
-    return ` ${amount} x\t${name}\t\t\t\t\t\t${price} kr\n`
+  function formattedProduct(name, amount, price) {
+    return ` ${amount} x\t${name}              \t${price} kr\n`
   }
 
-  exports.getFakeProducts = function () {
-    const fruits = ['Banana', 'Apple', 'Mango']
-    const products = fruits.map(name => {
-      return { name, amount: getRandomInt(5)+1, price: (getRandomInt(10)+1) }
-    });
-    const list = products.map(({ name, amount, price }) => {
-      return getProductLine(name, amount, price)
-    }).join('');
-    const total = products.reduce((previousValue, currentValue) => {
-      return previousValue + currentValue.price
-    }, 0) * 100
-    console.log(total, list)
-
-    return { list, total }
+  const wishList = [];
+  while (wishList.length < 3) {
+    const randomItem = catalog[Math.floor(Math.random() * catalog.length)];
+    if (!wishList.includes(randomItem)) {
+      wishList.push(randomItem);
+    }
   }
 
+  const shoppingCart = wishList.map(fruit => {
+    const amount = getRandomInt(3) + 1;
+    return { name: fruit.name, amount, price: fruit.price * amount }
+  });
 
-  exports.getDeepLink = function (shortlinkUrl, environment) {
-    const config = exports.configs[environment].deeplink;
+  const formattedList = shoppingCart.map(({ name, amount, price }) => {
+    return formattedProduct(name, amount, price)
+  }).join('');
 
-    const url = [
-      'https://',
-      config.baseUrl,
-      '?apn=' + config.apn,
-      '&ibi=' + config.ibi,
-      '&isi=' + config.isi,
-      '&ius=eu.settle.app.firebaselink',
-      '&link=https://' + config.env + '://qr/' + encodeURI(shortlinkUrl),
-    ].join('');
+  const totalCost = shoppingCart.reduce((previousValue, currentValue) => {
+    return previousValue + currentValue.price
+  }, 0) * 100
 
-    return url;
-  }
+  return { formattedList, totalCost }
+}
+
+
+export const getDeepLink = function (shortlinkUrl, environment) {
+  const config = configs[environment].deeplink;
+
+  const url = [
+    'https://',
+    config.baseUrl,
+    '?apn=' + config.apn,
+    '&ibi=' + config.ibi,
+    '&isi=' + config.isi,
+    '&ius=eu.settle.app.firebaselink',
+    '&link=https://' + config.env + '://qr/' + encodeURI(shortlinkUrl),
+  ].join('');
+
+  return url;
+}
+
+export default { configs, outcomeDescriptions, statusCodes, doRequest, getFakeProducts, getDeepLink };

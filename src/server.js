@@ -1,28 +1,32 @@
 const express = require('express');
-const path = require('path');
-
+const setupProxy = require('./setupProxy');
+const short = require('short-uuid');
 const app = express();
-const credentials = {
-  'userId': '76pj520h',
-  'merchantId': 'f1645s',
-  'secret': '.IIIXVCFdey3Bo5HD4gQh2+y_Ce9C.qodl_9FB.CQAWHua_rCrpCn3N-YwagvGY7',
-}
 
-app.use(express.static(path.join(__dirname, 'build')));
-app.get('/', function(req, res) {
-  const data = req.body
-  console.log(req.headers)
-  console.log('body: ', data)
-  res.json({"ping":"pong"});
-});
+console.log('Serving static asserts from ./build')
+app.use(express.static('build'));
+
+setupProxy(app);
+
+
 app.get('/credentials', function(req, res) {
+  const credentials = {
+    'userId': '76pj520h',
+    'merchantId': 'f1645s',
+    'secret': '.IIIXVCFdey3Bo5HD4gQh2+y_Ce9C.qodl_9FB.CQAWHua_rCrpCn3N-YwagvGY7',
+  }
   const data = req.body
+  console.log('-------------------------')
+  console.log(req.method, req.url, short.generate())
   console.log(req.headers)
   console.log('body: ', data)
   res.json(credentials);
 });
+
 app.get('/callback', function(req, res) {
   const data = req.body
+  console.log('-------------------------')
+  console.log(req.method, req.url, short.generate())
   console.log(req.headers)
   console.log('body: ', data)
   if (!data) {
@@ -32,7 +36,6 @@ app.get('/callback', function(req, res) {
   }
   console.assert(data['meta']['event'] === 'shortlink_scanned')
 
-
   const { id: scantoken, argstring: transaction_id } = data['object']
 
   res.json({
@@ -41,5 +44,5 @@ app.get('/callback', function(req, res) {
   });
 });
 
-console.log(`Listening to 0.0.0.0:9000`)
-app.listen(9000);
+console.log(`Listening to 0.0.0.0:80`)
+app.listen(80);
