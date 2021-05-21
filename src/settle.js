@@ -83,7 +83,7 @@ export const doRequest = async function (method, endpoint, credentials, payload)
 
 export const getFakeProducts = function () {
   const catalog = [
-    { name: '🍐 Pear     ', price: 2 },
+    { name: '🍐 Pear      ', price: 2 },
     { name: '🍎 Apple   ', price: 2 },
     { name: '🍌 Banana ', price: 3 },
     { name: '🍇 Grapes ', price: 4 },

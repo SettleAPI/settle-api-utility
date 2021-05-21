@@ -183,22 +183,20 @@ class App extends React.Component {
     let shortlinkId = null;
     let customer = '';
 
-
-    if (this.isOutcomeCallback()) {
-      if (!this.state.shortlinkIdWithCallback) {
-        throw Error("Unable to get or create shortlink");
-      }
-      shortlinkId = shortlinkIdWithCallback;
-    } else {
-      shortlinkId = shortlinkIdNoCallback;
-    }
-
     switch (demo) {
       case demos.PHONENUMBER:
         customer = `msisdn:${phonenumber}`;
         break;
       case demos.SHORTLINK_REUSE:
       case demos.SHORTLINK_SINGLE:
+        if (this.isOutcomeCallback()) {
+          if (!this.state.shortlinkIdWithCallback) {
+            throw Error("Unable to get or create shortlink");
+          }
+          shortlinkId = shortlinkIdWithCallback;
+        } else {
+          shortlinkId = shortlinkIdNoCallback;
+        }
         customer = `shortlink_id:${shortlinkId}`;
         break;
       case demos.PAYMENTLINK:
@@ -265,7 +263,7 @@ class App extends React.Component {
     const { step, demo } = this.state
     let nextStep = step + 1;
     if (step === steps.OUTCOME && (demo === demos.PHONENUMBER || demo === demos.PAYMENTLINK)) nextStep += 1;
-    if (step === steps.PAYMENT_REQUEST) this.prepareDemo();
+    if (nextStep === steps.PAYMENT_REQUEST) this.prepareDemo();
     this.setState({ step: nextStep })
   }
 
@@ -289,6 +287,7 @@ class App extends React.Component {
         this.createMissingLinks();
         this.setState({
           loadingShortlink: false,
+          shortlinkId: this.isOutcomeCallback() ? this.state.shortlinkIdWithCallback : this.state.shortlinkIdNoCallback
         });
       });
 
@@ -566,6 +565,7 @@ class App extends React.Component {
       credStatus,
       phonenumber,
       environment,
+      shortlinkId,
       callbackUri,
       allowCredit,
       autoCapture,
@@ -578,10 +578,8 @@ class App extends React.Component {
       lastStatusMessage,
       loadingCredentials,
       currentTransactionId,
-      shortlinkIdNoCallback,
       loadingPaymentRequest,
       advancedRequestOptions,
-      shortlinkIdWithCallback,
     } = this.state
 
     const isDemoPhonenumber = demo === demos.PHONENUMBER;
@@ -591,7 +589,6 @@ class App extends React.Component {
     const isOutcomeCallback = this.isOutcomeCallback();
     const isOutcomePolling = this.isOutcomePolling();
     const mobileFriendlyURL = settle.getDeepLink(acceptanceUrl, environment);
-    const shortlinkId = isOutcomeCallback ? shortlinkIdWithCallback : shortlinkIdNoCallback
 
     return (
       <main className="App">
@@ -1045,6 +1042,17 @@ class App extends React.Component {
                           <button className="pure-button" type="button" disabled={!currentTransactionId} onClick={(event) => this.handleRelease(event)}>Release payment</button>
                         </div>
 
+                        <div className="pure-control-group">
+                          <label htmlFor="customer">Customer</label>
+                          <input
+                            className="pure-input-2-4"
+                            name="customer"
+                            type="text"
+                            id="customer"
+                            value={customer}
+                            onChange={(event) => this.handleChange(event)}
+                          />
+                        </div>
                         <div className="pure-control-group">
                           <label htmlFor="autoCapture" className="pure-checkbox">
                             <input
